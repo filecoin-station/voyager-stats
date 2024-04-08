@@ -1,0 +1,26 @@
+{
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "migrate": "node node_modules/spark-evaluate/bin/migrate.js",
+    "start": "node bin/spark-stats.js",
+    "test": "standard && mocha"
+  },
+  "devDependencies": {
+    "mocha": "^10.4.0",
+    "spark-evaluate": "filecoin-station/spark-evaluate#main",
+    "standard": "^17.1.0"
+  },
+  "dependencies": {
+    "@sentry/node": "^7.109.0",
+    "debug": "^4.3.4",
+    "http-assert": "^1.5.0",
+    "http-responders": "^2.0.2",
+    "pg": "^8.11.5"
+  },
+  "standard": {
+    "env": [
+      "mocha"
+    ]
+  }
+}
