@@ -3,7 +3,7 @@ import { once } from 'node:events'
 import assert, { AssertionError } from 'node:assert'
 import pg from 'pg'
 import createDebug from 'debug'
-import { mapParticipantsToIds } from 'spark-evaluate/lib/public-stats.js'
+import { mapParticipantsToIds } from 'voyager-evaluate/lib/public-stats.js'
 
 import { createHandler, today } from '../lib/handler.js'
 import { DATABASE_URL } from '../lib/config.js'
