@@ -205,7 +205,7 @@ const assertResponseStatus = async (res, status) => {
 
 const givenRetrievalStats = async (pgPool, { day, total, successful }) => {
   await pgPool.query(
-    'INSERT INTO retrieval_stats (day, total, successful) VALUES ($1, $2, $3, $4)',
+    'INSERT INTO retrieval_stats (day, total, successful) VALUES ($1, $2, $3)',
     [day, total, successful]
   )
 }
