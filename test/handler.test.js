@@ -3,7 +3,7 @@ import { once } from 'node:events'
 import assert, { AssertionError } from 'node:assert'
 import pg from 'pg'
 import createDebug from 'debug'
-import { mapParticipantsToIds } from 'spark-evaluate/lib/public-stats.js'
+import { mapParticipantsToIds } from 'voyager-evaluate/lib/public-stats.js'
 
 import { createHandler, today } from '../lib/handler.js'
 import { DATABASE_URL } from '../lib/config.js'
@@ -137,30 +137,6 @@ describe('HTTP request handler', () => {
       await assertResponseStatus(res, 200)
       assert.strictEqual(res.headers.get('cache-control'), 'public, max-age=31536000, immutable')
     })
-
-    it('sums daily retrievals from all miners', async () => {
-      await givenRetrievalStats(pgPool, { day: '2024-01-10', minerId: 'f1one', total: 10, successful: 1 })
-      await givenRetrievalStats(pgPool, { day: '2024-01-10', minerId: 'f1two', total: 100, successful: 50 })
-      await givenRetrievalStats(pgPool, { day: '2024-01-11', minerId: 'f1one', total: 20, successful: 1 })
-      await givenRetrievalStats(pgPool, { day: '2024-01-11', minerId: 'f1two', total: 200, successful: 60 })
-
-      const res = await fetch(
-        new URL(
-          '/retrieval-success-rate?from=2024-01-10&to=2024-01-11',
-          baseUrl
-        ), {
-          redirect: 'manual'
-        }
-      )
-      await assertResponseStatus(res, 200)
-      /** @type {{ day: string, success_rate: number }[]} */
-      const stats = await res.json()
-      stats.sort((a, b) => new Date(a.day) - new Date(b.day))
-      assert.deepStrictEqual(stats, [
-        { day: '2024-01-10', success_rate: 51 / 110 },
-        { day: '2024-01-11', success_rate: 61 / 220 }
-      ])
-    })
   })
 
   describe('GET /participants/daily', () => {
@@ -215,35 +191,6 @@ describe('HTTP request handler', () => {
       ])
     })
   })
-
-  describe('GET /miners/retrieval-success-rate/summary', () => {
-    it('returns a summary of miners RSR for the given date range', async () => {
-      // before the range
-      await givenRetrievalStats(pgPool, { day: '2024-01-10', minerId: 'f1one', total: 10, successful: 1 })
-      await givenRetrievalStats(pgPool, { day: '2024-01-10', minerId: 'f1two', total: 100, successful: 20 })
-      // in the range
-      await givenRetrievalStats(pgPool, { day: '2024-01-11', minerId: 'f1one', total: 20, successful: 1 })
-      await givenRetrievalStats(pgPool, { day: '2024-01-11', minerId: 'f1two', total: 200, successful: 150 })
-      // after the range
-      await givenRetrievalStats(pgPool, { day: '2024-01-12', minerId: 'f1one', total: 30, successful: 1 })
-      await givenRetrievalStats(pgPool, { day: '2024-01-12', minerId: 'f1two', total: 300, successful: 60 })
-
-      const res = await fetch(
-        new URL(
-          '/miners/retrieval-success-rate/summary?from=2024-01-11&to=2024-01-11',
-          baseUrl
-        ), {
-          redirect: 'manual'
-        }
-      )
-      await assertResponseStatus(res, 200)
-      const stats = await res.json()
-      assert.deepStrictEqual(stats, [
-        { miner_id: 'f1one', success_rate: 0.05 },
-        { miner_id: 'f1two', success_rate: 0.75 }
-      ])
-    })
-  })
 })
 
 const assertResponseStatus = async (res, status) => {
@@ -256,10 +203,10 @@ const assertResponseStatus = async (res, status) => {
   }
 }
 
-const givenRetrievalStats = async (pgPool, { day, minerId, total, successful }) => {
+const givenRetrievalStats = async (pgPool, { day, total, successful }) => {
   await pgPool.query(
-    'INSERT INTO retrieval_stats (day, miner_id, total, successful) VALUES ($1, $2, $3, $4)',
-    [day, minerId ?? 'f1test', total, successful]
+    'INSERT INTO retrieval_stats (day, total, successful) VALUES ($1, $2, $3)',
+    [day, total, successful]
   )
 }
 

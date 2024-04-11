@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         dependencyStartsWith:
-          - spark-evaluate
+          - voyager-evaluate
     steps:
       - name: Dependabot metadata
         id: metadata

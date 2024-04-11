@@ -1,6 +1,4 @@
-# fly.toml file generated for spark on 2023-05-16T19:09:01+02:00
-
-app = "spark-stats"
+app = "voyager-stats"
 primary_region = "cdg"
 kill_signal = "SIGINT"
 kill_timeout = 5
@@ -21,7 +19,7 @@ processes = []
   protocol = "tcp"
   script_checks = []
   [services.concurrency]
-    # Remember to update PG Pool config option `max` in bin/spark-stats.js when changing `hard_limit`.
+    # Remember to update PG Pool config option `max` in bin/voyager-stats.js when changing `hard_limit`.
     hard_limit = 800
     soft_limit = 600
     type = "connections"
