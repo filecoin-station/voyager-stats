@@ -1,7 +1,7 @@
 import http from 'node:http'
 import { once } from 'node:events'
 import pg from 'pg'
-import Sentry from '@sentry/node'
+import * as Sentry from '@sentry/node'
 import fs from 'node:fs/promises'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
