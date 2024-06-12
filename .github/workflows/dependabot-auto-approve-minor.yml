@@ -15,6 +15,7 @@ jobs:
           - mocha
           - pg
           - debug
+          - braces
     steps:
       - name: Dependabot metadata
         id: metadata
