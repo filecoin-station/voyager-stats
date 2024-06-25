@@ -7,7 +7,7 @@
     "test": "standard && mocha"
   },
   "devDependencies": {
-    "mocha": "^10.4.0",
+    "mocha": "^10.5.1",
     "voyager-evaluate": "filecoin-station/voyager-evaluate#main",
     "standard": "^17.1.0"
   },
